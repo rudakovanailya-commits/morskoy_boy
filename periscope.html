@@ -372,6 +372,33 @@
   .hint { font-size: 12px; color: #5a8068; line-height: 1.45; padding: 0 4px; }
   .hint-mobile { display: none; }
 
+  /* ───── Мобильный HUD внутри игры ───── */
+  .mob-hud {
+    display: none; position: absolute; top: 0; left: 0; right: 0; z-index: 18;
+    pointer-events: none; padding: 6px 10px;
+    justify-content: space-between;
+  }
+  .mh-item {
+    font-size: 12px; font-weight: 700; color: rgba(200,255,220,.55);
+    text-shadow: 0 1px 4px rgba(0,0,0,.9);
+    background: rgba(5,15,10,.45); padding: 3px 8px; border-radius: 4px;
+  }
+  .mh-ammo { color: rgba(255,220,130,.7); }
+
+  .mob-btn-fire {
+    display: none; position: absolute; z-index: 18;
+    bottom: 10%; right: 6%;
+    width: 64px; height: 64px; border-radius: 50%;
+    border: 2px solid rgba(200,160,40,.45);
+    background: rgba(140,110,20,.3);
+    color: rgba(255,230,140,.85); font-size: 11px; font-weight: 800;
+    letter-spacing: .06em; cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px);
+    transition: transform .1s, background .1s;
+  }
+  .mob-btn-fire:active { transform: scale(.88); background: rgba(200,160,40,.5); }
+
   /* ───── Мобильная адаптация ───── */
   .game {
     -webkit-touch-callout: none; -webkit-user-select: none; user-select: none;
@@ -379,50 +406,40 @@
   }
 
   @media (max-width: 700px) {
-    body { background: #030806; }
-    .container { flex-direction: column; padding: 6px; gap: 8px; align-items: stretch; }
-    .game { flex: none; width: 100%; max-width: none; border-radius: 10px; }
-
-    .panel {
-      width: 100%; display: grid; gap: 6px;
-      grid-template-columns: repeat(3, 1fr);
+    html, body { height: 100dvh; height: 100vh; overflow: hidden; background: #030806; margin: 0; }
+    .container {
+      padding: 0; gap: 0; max-width: none;
+      height: 100dvh; height: 100vh;
     }
-    .box { padding: 8px 10px; border-radius: 8px; }
-    .box .label { font-size: 9px; margin-bottom: 2px; }
-    .box .value { font-size: 17px; }
-    .torpedo-bar { margin-top: 2px; }
-    .torp-pip { width: 10px; height: 4px; }
+    .game {
+      flex: none; width: 100%; height: 100dvh; height: 100vh;
+      max-width: none; aspect-ratio: unset;
+      border-radius: 0; border: none;
+    }
+    .panel { display: none; }
 
-    .btn-row { grid-column: 1 / -1; gap: 8px; }
-    button { padding: 16px 12px; font-size: 15px; min-width: 0; }
-    .btn-fire { flex: 2; }
-    .reload-wrap { grid-column: 1 / -1; }
-    .hint { grid-column: 1 / -1; text-align: center; }
-    .hint-desktop { display: none; }
-    .hint-mobile { display: inline; }
+    .mob-hud { display: flex; }
+    .mob-btn-fire { display: flex; align-items: center; justify-content: center; }
 
-    .overlay-card--wide { max-width: 96vw; }
-    .overlay-card { max-width: 96vw; padding: 16px 14px; }
-    .overlay-card h2 { font-size: 16px; }
-    .overlay-card p { font-size: 12px; }
-    .mode-cards { flex-direction: column; gap: 8px; }
-    .mode-card { padding: 12px 10px; }
+    .overlay-card--wide { max-width: 94vw; }
+    .overlay-card { max-width: 94vw; padding: 14px 12px; }
+    .overlay-card h2 { font-size: 15px; }
+    .overlay-card p { font-size: 11px; }
+    .mode-cards { flex-direction: column; gap: 6px; }
+    .mode-card { padding: 10px 8px; }
     .mode-card .mode-key { padding: 8px 18px; font-size: 13px; }
 
-    .wave-banner { font-size: 16px; }
-    .stage-name { font-size: 9px; }
-    .radio-toast { font-size: 11px; bottom: 6%; padding: 5px 12px; }
-    .boss-hp { width: 140px; height: 8px; }
-    .float-pts { font-size: 15px; }
-    .float-pts--big { font-size: 22px; }
+    .wave-banner { font-size: 15px; }
+    .stage-name { font-size: 9px; top: 12%; }
+    .radio-toast { font-size: 11px; bottom: 22%; padding: 5px 12px; }
+    .boss-hp { width: 120px; height: 7px; }
+    .float-pts { font-size: 14px; }
+    .float-pts--big { font-size: 20px; }
   }
 
   @media (max-width: 400px) {
-    .panel { grid-template-columns: repeat(2, 1fr); }
-    .box:nth-child(6) { display: none; }
-    .overlay-card h2 { font-size: 15px; }
-    .mode-card .mode-icon { font-size: 22px; }
-    .mode-card h3 { font-size: 14px; }
+    .mob-btn-fire { width: 56px; height: 56px; font-size: 10px; }
+    .mh-item { font-size: 11px; padding: 2px 6px; }
   }
 </style>
 </head>
@@ -498,18 +515,24 @@
         </div>
       </div>
     </div>
+    <div class="mob-hud" id="mobHud">
+      <span class="mh-item" id="mhWave">В1</span>
+      <span class="mh-item" id="mhScore">0</span>
+      <span class="mh-item mh-ammo" id="mhAmmo">0</span>
+    </div>
+    <button type="button" class="mob-btn-fire" id="mobBtnFire">ПУСК</button>
   </div>
 
   <div class="panel">
     <div class="box"><span class="label" id="stageLabel">—</span><span class="value" id="waveEl">—</span></div>
     <div class="box"><span class="label">Очки</span><span class="value" id="score">0</span></div>
-    <div class="box"><span class="label">Рекорд</span><span class="value" id="bestScore">0</span></div>
-    <div class="box box--combo"><span class="label">Комбо</span><span class="value" id="comboEl">&times;0</span></div>
+    <div class="box mob-hide"><span class="label">Рекорд</span><span class="value" id="bestScore">0</span></div>
+    <div class="box box--combo mob-hide"><span class="label">Комбо</span><span class="value" id="comboEl">&times;0</span></div>
     <div class="box">
       <span class="label">Торпеды</span><span class="value" id="ammo">0</span>
       <div class="torpedo-bar" id="torpBar"></div>
     </div>
-    <div class="box"><span class="label">Цели в зоне</span><span class="value" id="targets">0</span></div>
+    <div class="box mob-hide"><span class="label">Цели в зоне</span><span class="value" id="targets">0</span></div>
     <div class="btn-row">
       <button type="button" class="btn-fire" id="btnFire" onclick="shoot()">ПУСК</button>
       <button type="button" class="btn-reset" onclick="resetGame()">Новый бой</button>
@@ -634,6 +657,11 @@ function pick(a){return a[(Math.random()*a.length)|0]}
 function speedMul(){return 1+Math.min((wave-1)*.06+sc/300,.55)}
 function spawnMs(){return Math.max(500,cfg().spawnBase-wave*90-Math.min(sc,40)*10)}
 
+var mhWave=document.getElementById("mhWave");
+var mhScore=document.getElementById("mhScore");
+var mhAmmo=document.getElementById("mhAmmo");
+var mobFire=document.getElementById("mobBtnFire");
+
 function updateUI(){
   scoreEl.textContent=sc;ammoEl.textContent=ammo;
   targEl.textContent=targets.length;
@@ -647,6 +675,9 @@ function updateUI(){
   game.classList.toggle("combo-hot",combo>=5);
   ch.classList.toggle("hot",combo>=3);
   updateTorpBar();
+  mhWave.textContent="\u0412"+wave;
+  mhScore.textContent=sc;
+  mhAmmo.textContent="\u26A1"+ammo;
 }
 
 function updateTorpBar(){
@@ -765,6 +796,8 @@ game.addEventListener("touchend",function(e){
   if(dt<300&&dx<20&&dy<20)shoot();
 },{passive:true});
 game.addEventListener("contextmenu",function(e){e.preventDefault()});
+mobFire.addEventListener("touchstart",function(e){e.stopPropagation();e.preventDefault();shoot()},{passive:false});
+mobFire.addEventListener("click",function(e){e.stopPropagation();shoot()});
 
 function rafLoop(now){
   var t=now!==undefined?now:performance.now();
