@@ -2,8 +2,17 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <title>Морской бой: перископ</title>
+<script>
+(function(){
+  var m = /Mobi|Android|iPhone|iPad|iPod|webOS|BlackBerry|Opera Mini|IEMobile/i.test(navigator.userAgent)
+    || 'ontouchstart' in window
+    || navigator.maxTouchPoints > 0
+    || screen.width < 860;
+  if(m) document.documentElement.classList.add('is-mobile');
+})();
+</script>
 <style>
   *, *::before, *::after { box-sizing: border-box; }
 
@@ -548,8 +557,6 @@
 
 <script>
 (function(){
-var isMob = 'ontouchstart' in window || navigator.maxTouchPoints > 0 || window.innerWidth < 860;
-if(isMob) document.documentElement.classList.add('is-mobile');
 var svgN=0;
 function gid(){return"_g"+(++svgN)}
 
