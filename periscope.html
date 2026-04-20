@@ -6,11 +6,14 @@
 <title>Морской бой: перископ</title>
 <script>
 (function(){
-  var m = /Mobi|Android|iPhone|iPad|iPod|webOS|BlackBerry|Opera Mini|IEMobile/i.test(navigator.userAgent)
-    || 'ontouchstart' in window
-    || navigator.maxTouchPoints > 0
-    || screen.width < 860;
-  if(m) document.documentElement.classList.add('is-mobile');
+  var h=document.documentElement;
+  function chk(){
+    var m=/Mobi|Android|iPhone|iPad|iPod|webOS|BlackBerry|Opera Mini|IEMobile/i.test(navigator.userAgent)
+      ||'ontouchstart' in window||navigator.maxTouchPoints>0
+      ||window.innerWidth<860||screen.width<860;
+    if(m)h.classList.add('is-mobile'); else h.classList.remove('is-mobile');
+  }
+  chk();window.addEventListener('resize',chk);
 })();
 </script>
 <style>
@@ -408,51 +411,63 @@
   }
   .mob-btn-fire:active { transform: scale(.88); background: rgba(200,160,40,.5); }
 
-  /* ───── Мобильная адаптация (класс .is-mobile на <html>) ───── */
+  /* ───── Мобильная адаптация ───── */
   .game {
     -webkit-touch-callout: none; -webkit-user-select: none; user-select: none;
     touch-action: none;
   }
 
-  .is-mobile body,
-  .is-mobile { height: 100dvh; height: 100vh; overflow: hidden; background: #030806; margin: 0; }
+  /* Стили через JS-класс */
+  .is-mobile body, .is-mobile { height:100dvh;height:100vh;overflow:hidden;background:#030806;margin:0 }
+  .is-mobile .container { flex-wrap:nowrap;flex-direction:column;padding:0;gap:0;max-width:none;height:100dvh;height:100vh;overflow:hidden }
+  .is-mobile .game { flex:none;width:100%;height:100dvh;height:100vh;max-width:none;aspect-ratio:unset;border-radius:0;border:none }
+  .is-mobile .panel { display:none!important }
+  .is-mobile .mob-hud { display:flex }
+  .is-mobile .mob-btn-fire { display:flex;align-items:center;justify-content:center }
+  .is-mobile .hint-desktop { display:none }
+  .is-mobile .hint-mobile { display:inline }
+  .is-mobile .overlay-card--wide { max-width:94vw }
+  .is-mobile .overlay-card { max-width:94vw;padding:14px 12px }
+  .is-mobile .overlay-card h2 { font-size:15px }
+  .is-mobile .overlay-card p { font-size:11px }
+  .is-mobile .mode-cards { flex-direction:column;gap:6px }
+  .is-mobile .mode-card { padding:10px 8px }
+  .is-mobile .mode-card .mode-key { padding:8px 18px;font-size:13px }
+  .is-mobile .wave-banner { font-size:15px }
+  .is-mobile .stage-name { font-size:9px;top:12% }
+  .is-mobile .radio-toast { font-size:11px;bottom:22%;padding:5px 12px }
+  .is-mobile .boss-hp { width:120px;height:7px }
+  .is-mobile .float-pts { font-size:14px }
+  .is-mobile .float-pts--big { font-size:20px }
 
-  .is-mobile .container {
-    flex-wrap: nowrap; flex-direction: column;
-    padding: 0; gap: 0; max-width: none;
-    height: 100dvh; height: 100vh; overflow: hidden;
+  /* Дублируем через @media — страховка если JS не сработал */
+  @media (max-width: 860px) {
+    html, body { height:100dvh;height:100vh;overflow:hidden;background:#030806;margin:0 }
+    .container { flex-wrap:nowrap!important;flex-direction:column!important;padding:0!important;gap:0!important;max-width:none!important;height:100dvh;height:100vh;overflow:hidden }
+    .game { flex:none!important;width:100%!important;height:100dvh;height:100vh;max-width:none!important;aspect-ratio:unset!important;border-radius:0!important;border:none!important }
+    .panel { display:none!important }
+    .mob-hud { display:flex }
+    .mob-btn-fire { display:flex;align-items:center;justify-content:center }
+    .hint-desktop { display:none }
+    .hint-mobile { display:inline }
+    .overlay-card--wide { max-width:94vw }
+    .overlay-card { max-width:94vw;padding:14px 12px }
+    .overlay-card h2 { font-size:15px }
+    .overlay-card p { font-size:11px }
+    .mode-cards { flex-direction:column;gap:6px }
+    .mode-card { padding:10px 8px }
+    .mode-card .mode-key { padding:8px 18px;font-size:13px }
+    .wave-banner { font-size:15px }
+    .stage-name { font-size:9px;top:12% }
+    .radio-toast { font-size:11px;bottom:22%;padding:5px 12px }
+    .boss-hp { width:120px;height:7px }
+    .float-pts { font-size:14px }
+    .float-pts--big { font-size:20px }
   }
-  .is-mobile .game {
-    flex: none; width: 100%; height: 100dvh; height: 100vh;
-    max-width: none; aspect-ratio: unset;
-    border-radius: 0; border: none;
-  }
-  .is-mobile .panel { display: none !important; }
-
-  .is-mobile .mob-hud { display: flex; }
-  .is-mobile .mob-btn-fire { display: flex; align-items: center; justify-content: center; }
-
-  .is-mobile .hint-desktop { display: none; }
-  .is-mobile .hint-mobile { display: inline; }
-
-  .is-mobile .overlay-card--wide { max-width: 94vw; }
-  .is-mobile .overlay-card { max-width: 94vw; padding: 14px 12px; }
-  .is-mobile .overlay-card h2 { font-size: 15px; }
-  .is-mobile .overlay-card p { font-size: 11px; }
-  .is-mobile .mode-cards { flex-direction: column; gap: 6px; }
-  .is-mobile .mode-card { padding: 10px 8px; }
-  .is-mobile .mode-card .mode-key { padding: 8px 18px; font-size: 13px; }
-
-  .is-mobile .wave-banner { font-size: 15px; }
-  .is-mobile .stage-name { font-size: 9px; top: 12%; }
-  .is-mobile .radio-toast { font-size: 11px; bottom: 22%; padding: 5px 12px; }
-  .is-mobile .boss-hp { width: 120px; height: 7px; }
-  .is-mobile .float-pts { font-size: 14px; }
-  .is-mobile .float-pts--big { font-size: 20px; }
 
   @media (max-width: 400px) {
-    .is-mobile .mob-btn-fire { width: 56px; height: 56px; font-size: 10px; }
-    .is-mobile .mh-item { font-size: 11px; padding: 2px 6px; }
+    .mob-btn-fire { width:56px;height:56px;font-size:10px }
+    .mh-item { font-size:11px;padding:2px 6px }
   }
 </style>
 </head>
@@ -792,17 +807,21 @@ function inOcular(cx,cy){var r=game.getBoundingClientRect(),w=r.width,h=r.height
 function setAim(cx,cy){if(paused||over)return;if(!inOcular(cx,cy))return;var r=game.getBoundingClientRect();if(r.width<=0)return;aimRel=clamp((cx-r.left)/r.width)}
 window.addEventListener("mousemove",function(e){setAim(e.clientX,e.clientY)});
 var _tStart=0,_tX0=0,_tY0=0;
+function _isUI(e){return!!e.target.closest('.overlay,button,.mode-card,.mob-btn-fire,.overlay-actions')}
 game.addEventListener("touchstart",function(e){
+  if(_isUI(e))return;
   e.preventDefault();
   var t=e.touches[0];if(!t)return;
   _tStart=performance.now();_tX0=t.clientX;_tY0=t.clientY;
   setAim(t.clientX,t.clientY);
 },{passive:false});
 game.addEventListener("touchmove",function(e){
+  if(_isUI(e))return;
   e.preventDefault();
   var t=e.touches[0];if(t)setAim(t.clientX,t.clientY);
 },{passive:false});
 game.addEventListener("touchend",function(e){
+  if(_isUI(e))return;
   var ct=e.changedTouches[0];if(!ct)return;
   var dt=performance.now()-_tStart;
   var dx=Math.abs(ct.clientX-_tX0),dy=Math.abs(ct.clientY-_tY0);
