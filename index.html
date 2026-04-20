@@ -387,15 +387,19 @@
   /* ───── Мобильный HUD внутри игры ───── */
   .mob-hud {
     display: none; position: absolute; top: 0; left: 0; right: 0; z-index: 18;
-    pointer-events: none; padding: 6px 10px;
-    justify-content: space-between;
+    pointer-events: none; padding: 8px 10px;
+    justify-content: space-between; gap: 6px;
   }
   .mh-item {
-    font-size: 12px; font-weight: 700; color: rgba(200,255,220,.55);
-    text-shadow: 0 1px 4px rgba(0,0,0,.9);
-    background: rgba(5,15,10,.45); padding: 3px 8px; border-radius: 4px;
+    font-size: 14px; font-weight: 800; color: #c8f0d8;
+    text-shadow: 0 1px 6px rgba(0,0,0,1), 0 0 10px rgba(0,0,0,.6);
+    background: rgba(5,18,10,.7); padding: 5px 10px; border-radius: 6px;
+    border: 1px solid rgba(60,140,80,.25);
+    line-height: 1;
   }
-  .mh-ammo { color: rgba(255,220,130,.7); }
+  .mh-item small { font-size: 9px; font-weight: 600; color: rgba(160,210,180,.6); display: block; margin-bottom: 2px; letter-spacing: .06em; }
+  .mh-ammo { color: #f0d870; }
+  .mh-combo { color: #80ffb0; }
 
   .mob-btn-fire {
     display: none; position: absolute; z-index: 18;
@@ -544,9 +548,10 @@
       </div>
     </div>
     <div class="mob-hud" id="mobHud">
-      <span class="mh-item" id="mhWave">В1</span>
-      <span class="mh-item" id="mhScore">0</span>
-      <span class="mh-item mh-ammo" id="mhAmmo">0</span>
+      <span class="mh-item" id="mhWave"><small>ВОЛНА</small>1</span>
+      <span class="mh-item" id="mhScore"><small>ОЧКИ</small>0</span>
+      <span class="mh-item mh-combo" id="mhCombo"><small>КОМБО</small>&times;0</span>
+      <span class="mh-item mh-ammo" id="mhAmmo"><small>ТОРПЕДЫ</small>0</span>
     </div>
     <button type="button" class="mob-btn-fire" id="mobBtnFire">ПУСК</button>
   </div>
@@ -688,6 +693,7 @@ function spawnMs(){return Math.max(500,cfg().spawnBase-wave*90-Math.min(sc,40)*1
 var mhWave=document.getElementById("mhWave");
 var mhScore=document.getElementById("mhScore");
 var mhAmmo=document.getElementById("mhAmmo");
+var mhCombo=document.getElementById("mhCombo");
 var mobFire=document.getElementById("mobBtnFire");
 
 function updateUI(){
@@ -703,9 +709,10 @@ function updateUI(){
   game.classList.toggle("combo-hot",combo>=5);
   ch.classList.toggle("hot",combo>=3);
   updateTorpBar();
-  mhWave.textContent="\u0412"+wave;
-  mhScore.textContent=sc;
-  mhAmmo.textContent="\u26A1"+ammo;
+  mhWave.innerHTML="<small>\u0412\u041e\u041b\u041d\u0410</small>"+wave;
+  mhScore.innerHTML="<small>\u041e\u0427\u041a\u0418</small>"+sc;
+  mhCombo.innerHTML="<small>\u041a\u041e\u041c\u0411\u041e</small>\u00d7"+combo;
+  mhAmmo.innerHTML="<small>\u0422\u041e\u0420\u041f\u0415\u0414\u042b</small>"+ammo;
 }
 
 function updateTorpBar(){
